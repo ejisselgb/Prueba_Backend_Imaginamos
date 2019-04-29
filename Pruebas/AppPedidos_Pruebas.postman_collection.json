@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "7180b584-e29d-423a-bcb2-bef369db976c",
+		"name": "AppPedidos_Pruebas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Obtener Conductores",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63da6abc-0607-4f02-b3ff-a98ce8dbee18",
+						"exec": [
+							" var responseJSON = JSON.parse(responseBody);",
+							" ",
+							" pm.globals.set(\"conductores\", responseJSON.datos);",
+							" ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_global}}/api/pedidos/conductores/:estado",
+					"host": [
+						"{{url_global}}"
+					],
+					"path": [
+						"api",
+						"pedidos",
+						"conductores",
+						":estado"
+					],
+					"variable": [
+						{
+							"key": "estado",
+							"value": "A"
+						}
+					]
+				},
+				"description": "Se obtiene el listado de todos los conductores activos"
+			},
+			"response": []
+		},
+		{
+			"name": "Asignar Tareas Conductor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "20997dde-8ca4-4617-bd9c-ab5425776928",
+						"exec": [
+							"var  listado =JSON.parse(pm.variables.get(\"conductores\"));",
+							"pm.environment.set(\"random_number\", _.random(0, (listado.length - 1)));",
+							"var index = pm.variables.get(\"random_number\");",
+							"var conductor = listado[index].id_conductor;",
+							"pm.environment.set(\"conductor_random\", conductor);",
+							"",
+							"",
+							"",
+							"tests[index]=true",
+							"tests[listado[index].id_conductor]=true",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id_conductor\": {{conductor_random}},\"id_pedido\": 7}"
+				},
+				"url": {
+					"raw": "{{url_global}}/api/pedidos/asignartarea",
+					"host": [
+						"{{url_global}}"
+					],
+					"path": [
+						"api",
+						"pedidos",
+						"asignartarea"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar lista de tares para un usuario",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_global}}/api/pedidos/vertareas/:conductor/:fecha_entrega",
+					"host": [
+						"{{url_global}}"
+					],
+					"path": [
+						"api",
+						"pedidos",
+						"vertareas",
+						":conductor",
+						":fecha_entrega"
+					],
+					"variable": [
+						{
+							"key": "conductor",
+							"value": "{{conductor_random}}"
+						},
+						{
+							"key": "fecha_entrega",
+							"value": "{{fecha_entrega}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Pedidos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "32907761-43b1-4ba4-b3a7-93036c5c2316",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody);",
+							"var datosPedido = JSON.parse(responseJSON.datos);",
+							"",
+							"pm.environment.set(\"random_number_pedidos\", _.random(0, (datosPedido.length - 1)));",
+							"var index = pm.variables.get(\"random_number_pedidos\");",
+							"pm.environment.set(\"codigo_pedido\", datosPedido[index].id_pedido);",
+							"pm.environment.set(\"fecha_entrega\", datosPedido[index].fecha_entrega);",
+							" ",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_global}}/api/pedidos/verpedidos/:fechaentrega",
+					"host": [
+						"{{url_global}}"
+					],
+					"path": [
+						"api",
+						"pedidos",
+						"verpedidos",
+						":fechaentrega"
+					],
+					"variable": [
+						{
+							"key": "fechaentrega",
+							"value": "{{fecha_entrega}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
