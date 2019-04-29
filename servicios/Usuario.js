@@ -1,4 +1,6 @@
-/*CRUD Usuario - Direcciones_Usuario*/
+/*CRUD 
+	@ Aqui se encuentran los endpoints para insertar usuario, direccion del usuario y crear una nueva direccion
+*/
 
 module.exports = (express, usuario, direcciones) => {
 
@@ -50,7 +52,9 @@ module.exports = (express, usuario, direcciones) => {
 	});
 
 
-	/*Enpoint para modificar estado y definir la direccion actual*/
+	/*Enpoint para modificar estado y definir la direccion actual
+		@Recibe en el cuerpo el id_direccione_usuario, email (usuario), estado_direccion (valor a actualizar)
+	*/
 	Usuario.put("/actualizardireccion", (request, response) => {
 		direcciones.update({ estado_direccion: request.body.estado_direccion}, {
 		  where: {

@@ -7,9 +7,11 @@ module.exports = (express, Sequelize, sequelize) => {
 	/*Llamado del modelo de base de datos*/
 	modelo.definicionModelo(Sequelize, sequelize);
 
-	const pedidos = require("./Pedidos")(express, modelo.pedido, modelo.conductor, modelo.tareas, modelo.franja);
+	/*Llamado a los scripts de los endpoints, pasando variables necesarias para la contruccion de las urls de conexion*/
+	const pedidos = require("./Pedidos")(express, Sequelize, modelo.pedido, modelo.conductor, modelo.tareas, modelo.franja, modelo.usuario, modelo.direcciones);
   	const usuario = require("./Usuario")(express, modelo.usuario, modelo.direcciones);
 
+  	/*Se define ruta para el acceso del api*/
   	routes.use("/pedidos", pedidos);
   	routes.use("/usuario", usuario);
 

@@ -1,6 +1,8 @@
-/*CRUD Pedidos y Conductor*/
+/*CRUD 
+	@ Aqui se encuentran los endpoints para insertar pedidos, conductores y asignar tareas a los conductores
+*/
 
-module.exports = (express, pedido, conductor, tareas, franja) => {
+module.exports = (express, Sequelize, pedido, conductor, tareas, franja, usuario, direcciones) => {
 
 	const Pedidos = express.Router();
 	var resultado = {};
@@ -83,25 +85,40 @@ module.exports = (express, pedido, conductor, tareas, franja) => {
 		});
 	});
 
+	/*Enpoint para traer todos los pedidos segun la fecha*/
+	Pedidos.get("/verpedidos/:fechaentrega", (request, response) => {
+		pedido.findAll({where: {fecha_entrega: request.params.fechaentrega},
+		})
+		.then(res => {
+	    	resultado = {
+	          datos: JSON.stringify(res),
+	          mensaje: "Consulta lista de tareas exitosa",
+	          estado: 200
+	        }
+	        response.json(resultado);
+	  	}).catch(err => {
+	    	resultado = {
+	          datos: {},
+	          mensaje: "No fue recuperar lista de tareas" + err,
+	          estado: 500
+	        }
+	    	response.json(resultado);
+	  	})	
+	});
+
 	/*Enpoint para obtener las tareas asigandas a un conductor*/
-
-	/*select t.id_pedido, t.id_conductor, p.id_franja_entrega, p.fecha_entrega, f.franja_horaria, u.nombre_apellido, d.direccion from "Tareas_Conductor" as t 
-	inner join "Pedido" as p 
-	ON t.id_conductor=123
-	inner join "Franja_Entrega" as f
-	ON f.id_franja_entrega = p.id_franja_entrega
-	inner join "Usuario" as u
-	ON u.email = p.email
-	inner join "Direcciones_Usuario" as d
-	ON d.email = u.email
-	where p.fecha_entrega = '2019-04-28' AND t.id_pedido = p.id_pedido AND d.estado_direccion = 'A';*/
-
 	Pedidos.get("/vertareas/:idconductor/:fechaentrega", (request, response) => {
 
+		tareas.findAll({attributes: ['id_pedido', 'id_conductor'], where: {id_conductor: request.params.idconductor},
 
-		tareas.findAll({where: {id_conductor: request.params.idconductor}, include: [{
-		    model: conductor
-		   }]
+			include: [{attributes: ['fecha_entrega'], model: pedido, required: true, where: {fecha_entrega: request.params.fechaentrega},
+
+				include: [{attributes: ['franja_horaria'], model: franja, required: true}],
+
+				include: [{attributes: ['nombre_apellido'], model: usuario, required: true, 
+					include: [{attributes: ['direccion'], model: direcciones, required: true,  where: {estado_direccion: 'A'}}],
+				}],
+			}],
 		})
 		.then(res => {
 	    	resultado = {
