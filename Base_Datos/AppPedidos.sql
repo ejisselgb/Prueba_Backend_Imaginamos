@@ -279,9 +279,6 @@ COPY public."Pedido" (id_pedido, email, id_franja_entrega, fecha_entrega) FROM s
 --
 
 COPY public."Tareas_Conductor" (id_tareas_conductor, id_conductor, id_pedido) FROM stdin;
-1	123	6
-2	123	7
-4	124	8
 \.
 
 
@@ -319,7 +316,7 @@ SELECT pg_catalog.setval('public."Pedido_id_pedido_seq"', 8, true);
 -- Name: Tareas_Conductor_id_tareas_conductor_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."Tareas_Conductor_id_tareas_conductor_seq"', 4, true);
+SELECT pg_catalog.setval('public."Tareas_Conductor_id_tareas_conductor_seq"', 59, true);
 
 
 --
